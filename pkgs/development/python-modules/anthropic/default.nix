@@ -24,7 +24,7 @@
 
 buildPythonPackage rec {
   pname = "anthropic";
-  version = "0.42.0";
+  version = "0.45.2";
   pyproject = true;
 
   disabled = pythonOlder "3.8";
@@ -33,8 +33,12 @@ buildPythonPackage rec {
     owner = "anthropics";
     repo = "anthropic-sdk-python";
     tag = "v${version}";
-    hash = "sha256-7cRXKXiyq3ty21klkitjjnm9rzBRmAXGYvvVxTNWeZ4=";
+    hash = "sha256-/QuAUU0/nNhJZouCP0LVkCFMTiNdeze/fF+SZKD1Jis=";
   };
+
+  postPatch = lib.optionalString (lib.versionOlder pytest-asyncio.version "0.25.0") ''
+    sed -i "/asyncio_default_fixture_loop_scope/d" pyproject.toml
+  '';
 
   build-system = [
     hatchling
